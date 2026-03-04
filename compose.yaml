@@ -1,0 +1,13 @@
+﻿services:
+  velox.api:
+    image: velox.api
+    build:
+      context: .
+      dockerfile: Velox.Api/Dockerfile
+
+  velox.api-1:
+    image: velox.api-1
+    build:
+      context: .
+      dockerfile: Velox.Api/Dockerfile
+
