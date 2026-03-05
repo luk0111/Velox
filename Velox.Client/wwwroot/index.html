@@ -4,14 +4,40 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Velox.Client</title>
+    <meta name="theme-color" content="#1e2a3a" />
+    <meta name="description" content="Velox - Professional Logistics Management System" />
+    <title>Velox - Logistics Management</title>
     <base href="/" />
     <link rel="preload" id="webassembly" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="Velox.Client.styles.css" rel="stylesheet" />
     <script type="importmap"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #151d28 0%, #1e2a3a 50%, #0d47a1 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+        #app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .loading-progress {
+            filter: drop-shadow(0 0 20px rgba(26, 115, 232, 0.4));
+        }
+        .loading-progress-text {
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
 <body>
