@@ -12,4 +12,11 @@ public class Order
     public double Height { get; set; }
     public DateTime ExpectedDeliveryTime { get; set; } 
     public string DestinationAdress { get; set; }
+    
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    
+    public OrderStatus Status { get; set; }
+    
+    public Guid? RouteID { get; set; }
 }
