@@ -1,0 +1,172 @@
+﻿@page "/counter"
+@inject IJSRuntime JsRuntime
+
+<style>
+    .page-header {
+        margin-bottom: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+    
+    .page-header-content h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #1e2a3a;
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .page-header-content p {
+        color: #64748b;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+    
+    .btn-back {
+        padding: 10px 20px;
+        background: #f1f5f9;
+        color: #1e2a3a;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+    
+    .btn-back:hover {
+        background: #e2e8f0;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .map-container {
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    }
+    
+    .map-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    
+    .map-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e2a3a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-toggle-map {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-toggle-map:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.35);
+    }
+    
+    #leafletMap {
+        height: 550px;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+    }
+    
+    .map-placeholder {
+        height: 550px;
+        width: 100%;
+        border-radius: 10px;
+        border: 2px dashed #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        background: #f8fafc;
+    }
+    
+    .map-placeholder-icon {
+        font-size: 4rem;
+        margin-bottom: 16px;
+    }
+</style>
+
+<div class="page-header">
+    <div class="page-header-content">
+        <h1>🗺️ Interactive Map</h1>
+        <p>View delivery locations and driver routes in real time</p>
+    </div>
+    <NavLink href="" class="btn-back">
+        ← Back to Dashboard
+    </NavLink>
+</div>
+
+<div class="map-container">
+    <div class="map-toolbar">
+        <span class="map-title">📍 View Map-London</span>
+        <button class="btn-toggle-map" @onclick="ToggleMap">
+            @if (_showMap)
+            {
+                <span>❌ Hide Map</span>
+            }
+            else
+            {
+                <span>🗺️ Load Map</span>
+            }
+        </button>
+    </div>
+    
+    @if (_showMap)
+    {
+        <div id="leafletMap"></div>
+    }
+    else
+    {
+        <div class="map-placeholder">
+            <div class="map-placeholder-icon">🗺️</div>
+            <p>Click the "Load Map" button to view the map</p>
+        </div>
+    }
+</div>
+
+@code {
+    private bool _showMap;
+    private bool _mapInitialized;
+
+    private async Task ToggleMap()
+    {
+        _showMap = !_showMap;
+        
+        if (_showMap && !_mapInitialized)
+        {
+            await Task.Delay(150); // Wait for the div to render
+            await JsRuntime.InvokeVoidAsync("leafletInterop.initMap", "leafletMap", 51.5074, -0.1278, 13);
+            _mapInitialized = true;
+        }
+    }
+}

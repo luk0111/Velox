@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
 <style>
     /* ============================================
@@ -19,6 +20,10 @@
         align-items: center;
         z-index: 9999;
         animation: splashFadeOut 0.8s ease-out 2s forwards;
+    }
+    
+    .splash-screen.hidden {
+        display: none;
     }
     
     @@keyframes splashFadeOut {
@@ -115,6 +120,11 @@
         font-family: 'Inter', 'Segoe UI', sans-serif;
         opacity: 0;
         animation: appFadeIn 0.6s ease-out 2.2s forwards;
+    }
+    
+    .app-container.no-delay {
+        opacity: 1;
+        animation: none;
     }
     
     @@keyframes appFadeIn {
@@ -239,6 +249,7 @@
         position: relative;
         overflow: hidden;
         margin-bottom: 4px;
+        text-decoration: none;
     }
     
     .btn-meniu::before {
@@ -442,6 +453,11 @@
         opacity: 0;
     }
     
+    .app-container.no-delay .content {
+        opacity: 1;
+        animation: none;
+    }
+    
     @@keyframes contentFadeIn {
         from {
             opacity: 0;
@@ -472,20 +488,23 @@
     }
 </style>
 
-@* Splash Screen - Pure CSS Animation *@
-<div class="splash-screen">
-    <img src="/images/logo.png" alt="Velox Logo" class="splash-logo" />
-    <div class="splash-title">VELOX</div>
-    <div class="splash-tagline">Logistics Management System</div>
-    <div class="splash-loader">
-        <div class="splash-loader-dot"></div>
-        <div class="splash-loader-dot"></div>
-        <div class="splash-loader-dot"></div>
+@* Splash Screen - Only show on first load *@
+@if (_showSplash)
+{
+    <div class="splash-screen">
+        <img src="/images/logo.png" alt="Velox Logo" class="splash-logo" />
+        <div class="splash-title">VELOX</div>
+        <div class="splash-tagline">Logistics Management System</div>
+        <div class="splash-loader">
+            <div class="splash-loader-dot"></div>
+            <div class="splash-loader-dot"></div>
+            <div class="splash-loader-dot"></div>
+        </div>
     </div>
-</div>
+}
 
 @* Main Application *@
-<div class="app-container">
+<div class="app-container @(_showSplash ? "" : "no-delay")">
     
     <div class="sidebar">
         <div class="sidebar-header">
@@ -501,47 +520,51 @@
             
             <div class="menu-section">
                 <div class="menu-section-title">Principal</div>
-                <button class="btn-meniu active">
+                <NavLink href="" class="btn-meniu" ActiveClass="active" Match="NavLinkMatch.All">
                     <span class="btn-meniu-icon">📊</span>
                     Dashboard
-                </button>
-                <button class="btn-meniu">
+                </NavLink>
+                <NavLink href="livrari" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">📦</span>
                     Livrări
                     <span class="btn-meniu-badge">12</span>
-                </button>
-                <button class="btn-meniu">
+                </NavLink>
+                <NavLink href="flota" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">🚚</span>
                     Flota
-                </button>
+                </NavLink>
             </div>
             
             <div class="menu-section">
                 <div class="menu-section-title">Gestionare</div>
-                <button class="btn-meniu">
+                <NavLink href="soferi" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">👥</span>
                     Șoferi
-                </button>
-                <button class="btn-meniu">
+                </NavLink>
+                <NavLink href="rute" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">📍</span>
                     Rute
-                </button>
-                <button class="btn-meniu">
+                </NavLink>
+                <NavLink href="counter" class="btn-meniu" ActiveClass="active">
+                    <span class="btn-meniu-icon">🗺️</span>
+                    Map
+                </NavLink>
+                <NavLink href="filtre" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">🔧</span>
                     Filtre
-                </button>
+                </NavLink>
             </div>
             
             <div class="menu-section">
                 <div class="menu-section-title">Rapoarte</div>
-                <button class="btn-meniu">
+                <NavLink href="statistici" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">📈</span>
                     Statistici
-                </button>
-                <button class="btn-meniu">
+                </NavLink>
+                <NavLink href="rapoarte" class="btn-meniu" ActiveClass="active">
                     <span class="btn-meniu-icon">📄</span>
                     Rapoarte
-                </button>
+                </NavLink>
             </div>
         </div>
         
@@ -584,3 +607,24 @@
     </div>
 </div>
 
+@code {
+    private bool _showSplash = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var splashShown = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "velox_splash_shown");
+            
+            if (splashShown == "true")
+            {
+                _showSplash = false;
+                StateHasChanged();
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("sessionStorage.setItem", "velox_splash_shown", "true");
+            }
+        }
+    }
+}
