@@ -2,7 +2,7 @@
 
 public class Route
 {
-    public string DriverId { get; set; }
+    public Guid DriverId { get; set; }
     public Guid Id { get; set; }
     //route optimizat (probabil json/encoded cumva)
     
@@ -10,4 +10,6 @@ public class Route
     public DateTime CreatedAt { get; set; }
     public DateTime? CompletedAt { get; set; }
     
+    public Driver Driver { get; set; }
+    public List<Order> Orders { get; set; }
 }

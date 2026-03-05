@@ -10,4 +10,5 @@ public class Driver
     public double Longitude { get; set; }
     public double MaxLoad { get; set; }
     public List<Order> Orders { get; set; }
+    public List<Route> Routes { get; set; }
 }
