@@ -1,7 +1,81 @@
 ﻿@page "/"
+@* Dacă pui codul în Home.razor, lasă @page "/" ca să fie prima pagină *@
 
-<PageTitle>Home</PageTitle>
+<style>
+    /* CSS simplu pentru tabel */
+    .tabel-livrari {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .tabel-livrari th, .tabel-livrari td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    .tabel-livrari th { background-color: #f8f9fa; }
+</style>
 
-<h1>Hello, world!</h1>
+<h2>LIVRĂRI</h2>
 
-Welcome to your new app.
+<button class="btn btn-primary" style="margin-bottom: 15px;" @onclick="AdaugaLivrare">
+    + Simulează o comandă nouă
+</button>
+
+<table class="tabel-livrari">
+    <thead>
+        <tr>
+            <th>ID Comandă</th>
+            <th>Client</th>
+            <th>Adresă</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comanda in listaLivrari)
+        {
+            <tr>
+                <td>@comanda.Id</td>
+                <td>@comanda.Client</td>
+                <td>@comanda.Adresa</td>
+                <td>
+                    <span style="color: @(comanda.Status == "Livrat" ? "green" : "orange")">
+                        @comanda.Status
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    // Modelul de date pentru o livrare
+    public class Livrare
+    {
+        public int Id { get; set; }
+        public string Client { get; set; }
+        public string Adresa { get; set; }
+        public string Status { get; set; }
+    }
+
+    // Lista care va popula tabelul
+    private List<Livrare> listaLivrari = new List<Livrare>
+    {
+        new Livrare { Id = 1, Client = "Popescu Ion", Adresa = "Str. Florilor 12", Status = "În tranzit" },
+        new Livrare { Id = 2, Client = "Ionescu Maria", Adresa = "Bvd. Unirii 45", Status = "Livrat" }
+    };
+
+    // Funcția care adaugă date în timp real
+    private void AdaugaLivrare()
+    {
+        var idNou = listaLivrari.Count + 1;
+        listaLivrari.Add(new Livrare
+        {
+            Id = idNou,
+            Client = "Client Nou",
+            Adresa = "Str. Principala 1",
+            Status = "Preluată"
+        });
+    }
+}
