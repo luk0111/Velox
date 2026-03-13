@@ -20,4 +20,7 @@ public class Order
     
     public Route Route { get; set; }
     public Guid? RouteID { get; set; }
+
+    public OrderStatus orderStatus { get; set; }
+
 }
